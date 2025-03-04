@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch } from 'react-redux';
 import { setUserDetail } from '@/src/store/slice/loginStatusSlice';
 import { setLoggedIn } from '@/src/store/slice/loginStatusSlice';
+import MostRated from '@/src/components/home/mostrated/MostRated'
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
@@ -72,6 +73,7 @@ const Home = () => {
       <Slider />
       <Categories />
       <Sale />
+      <MostRated/>
     </ScrollView>
   );
 };

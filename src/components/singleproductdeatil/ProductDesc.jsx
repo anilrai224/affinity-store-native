@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import React from 'react';
 import { Colors } from '../../../constants/Colors';
 import RenderHTML from 'react-native-render-html';
@@ -6,13 +6,13 @@ import RenderHTML from 'react-native-render-html';
 const ProductDesc = ({ product = { title: 'Default Product', description: '<p>No description available</p>' } }) => {
     const { title, description } = product;
     const htmlContent = description;
-
+    const {width:contentWidth} = useWindowDimensions()
     return (
         <View style={styles.container}>
             <View style={styles.productDetails}>
                 <Text style={styles.name}>{title}</Text>
                 <RenderHTML
-                    contentWidth={300}
+                    contentWidth={contentWidth}
                     source={{ html: htmlContent }}
                     tagsStyles={{
                         p: { color: 'black', marginBottom: 8 },

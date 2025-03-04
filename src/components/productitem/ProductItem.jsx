@@ -8,7 +8,11 @@ const windowWidth = Dimensions.get('window').width;
 
 const ProductItem = ({ product }) => {
   const router = useRouter();
-  const imgUrl = product?.image_samples[0].image_url ? `${product.storage_path}${product.image_samples[0].image_url}` : null;
+  const imgUrl = product?.image_samples?.[0]?.image_url 
+  ? `${product.storage_path}${product.image_samples[0].image_url}` 
+  : product?.thumbnail 
+  ? `${product.storage_path}${product.thumbnail}` 
+  : null;
 
   const ratings = product.ratings || []; 
   const totalStars = ratings.reduce((acc, rating) => acc + rating.stars, 0);
@@ -42,6 +46,9 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 4,
+    height:240,
+    flexDirection:'column',
+    justifyContent:'space-between'
   },
   textContainer: {
     display: 'flex',

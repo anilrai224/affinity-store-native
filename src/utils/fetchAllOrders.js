@@ -1,17 +1,22 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
+import axios from 'axios';
 
-export const fetchAllCartProducts = async()=>{
-    const token = await AsyncStorage.getItem("auth-token");
+export const fetchAllOrders = async () => {
+    const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/system/orders/all`;
     try {
-        const response = await axios.get(`${process.env.EXPO_PUBLIC_API_URL}/system/orders/all`,{
-            headers:{
-                'Authorization':'Bearer '+token,
-                'Accept':'application/json'
+        const response = await axios.get(apiUrl, {
+            headers: {
+                'Content-Type': 'application/json',
             }
         });
-        return response.data;
+
+        if (response.status === 200 && response.data.success) {
+            return response;
+        } else if (response.status === 401) {
+            throw new Error('Unauthorized access. Please log in again.');
+        } else {
+            throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        }
     } catch (error) {
-        console.error('Error '+error)
+        return { success: false, message: error.message };
     }
-}
+};

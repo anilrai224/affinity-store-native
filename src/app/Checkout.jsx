@@ -17,21 +17,21 @@ const Checkout = () => {
 
   const fetchBillingDetail = async () => {
     const token = await AsyncStorage.getItem('auth-token');
-    console.log('Making API call to /system/billings/check with token ' + token);
-
-    const response = await axios.get(`${process.env.EXPO_PUBLIC_API_URL}/system/billings/check`, {
-      headers: {
-        'Authorization': 'Bearer ' + token,
-        'Accept': 'application/json'
+    try {
+      const response = await axios.get(`${process.env.EXPO_PUBLIC_API_URL}/system/billings/check`, {
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Accept': 'application/json'
+        }
+      });
+  
+      if (response.data.success) {
+        setBillingDetails(response.data.data);
+      } else {
+        setBillingDetails(null);
       }
-    });
-
-    console.log('Response Data:', response.status);
-
-    if (response.data.success) {
-      setBillingDetails(response.data.data);
-    } else {
-      console.log('API response not successful', response.data);
+    } catch (error) {
+      setBillingDetails(null);
     }
   };
 

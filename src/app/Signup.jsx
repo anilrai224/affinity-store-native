@@ -13,14 +13,30 @@ const Signup = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+    const [errors, setErrors] = useState({});
     const router = useRouter();
 
     const handleSignup = async () => {
+        setErrors({});
+
+        const newErrors = {};
+
+        if (!firstName) newErrors.firstName = 'First Name is required';
+        if (!lastName) newErrors.lastName = 'Last Name is required';
+        if (!email) newErrors.email = 'Email is required';
+        if (!password) newErrors.password = 'Password is required';
+        if (!confirmPassword) newErrors.confirmPassword = 'Confirm Password is required';
+        
         if (password !== confirmPassword) {
-            Alert.alert('Error', 'Passwords do not match!');
+            newErrors.confirmPassword = 'Passwords do not match!';
+        }
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
             return;
         }
-        console.log('register')
+
+        console.log('register');
         const payload = {
             payload: {
                 customer: {
@@ -32,6 +48,7 @@ const Signup = () => {
                 },
             },
         };
+
         try {
             const response = await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/system/auth/register`, payload, {
                 headers: {
@@ -40,17 +57,16 @@ const Signup = () => {
             });
             if (response.status === 200) {
                 Alert.alert('Success', 'Signup successful!');
-                setFirstName(" ");
-                setLastName(" ");
-                setEmail(" ");
-                setPassword(" ");
-                setConfirmPassword(" ");
+                setFirstName("");
+                setLastName("");
+                setEmail("");
+                setPassword("");
+                setConfirmPassword("");
                 router.push('/Login');
             } else {
                 Alert.alert('Error', response.data.message || 'Signup failed!');
             }
         } catch (error) {
-            console.error('Error during signup:', error);
             Alert.alert('Error', 'An error occurred during signup. Please try again.');
         }
     };
@@ -58,6 +74,7 @@ const Signup = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.welcomeText}>Create Account</Text>
+
             <View style={styles.inputContainer}>
                 <Ionicons name="person" size={24} color="#aaa" />
                 <TextInput
@@ -68,6 +85,8 @@ const Signup = () => {
                     onChangeText={setFirstName}
                 />
             </View>
+            {errors.firstName && <Text style={styles.errorText}>{errors.firstName}</Text>}
+
             <View style={styles.inputContainer}>
                 <Ionicons name="person" size={24} color="#aaa" />
                 <TextInput
@@ -78,6 +97,8 @@ const Signup = () => {
                     onChangeText={setLastName}
                 />
             </View>
+            {errors.lastName && <Text style={styles.errorText}>{errors.lastName}</Text>}
+
             <View style={styles.inputContainer}>
                 <Ionicons name="mail" size={24} color="#aaa" />
                 <TextInput
@@ -89,6 +110,8 @@ const Signup = () => {
                     keyboardType="email-address"
                 />
             </View>
+            {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+
             <View style={styles.inputContainer}>
                 <Ionicons name="lock-closed" size={24} color="#aaa" />
                 <TextInput
@@ -100,13 +123,11 @@ const Signup = () => {
                     secureTextEntry={!passwordVisible}
                 />
                 <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)}>
-                    <Ionicons 
-                        name={passwordVisible ? "eye" : "eye-off"} 
-                        size={24} 
-                        color="#aaa" 
-                    />
+                    <Ionicons name={passwordVisible ? "eye" : "eye-off"} size={24} color="#aaa" />
                 </TouchableOpacity>
             </View>
+            {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
+
             <View style={styles.inputContainer}>
                 <Ionicons name="lock-closed" size={24} color="#aaa" />
                 <TextInput
@@ -118,20 +139,19 @@ const Signup = () => {
                     secureTextEntry={!confirmPasswordVisible}
                 />
                 <TouchableOpacity onPress={() => setConfirmPasswordVisible(!confirmPasswordVisible)}>
-                    <Ionicons 
-                        name={confirmPasswordVisible ? "eye" : "eye-off"} 
-                        size={24} 
-                        color="#aaa" 
-                    />
+                    <Ionicons name={confirmPasswordVisible ? "eye" : "eye-off"} size={24} color="#aaa" />
                 </TouchableOpacity>
             </View>
+            {errors.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword}</Text>}
+
             <TouchableOpacity style={styles.button} onPress={handleSignup}>
                 <Text style={styles.buttonText}>Sign Up</Text>
             </TouchableOpacity>
+
             <Text style={styles.loginText}>
                 Already have an account?
                 <TouchableOpacity style={styles.loginLink} onPress={() => router.push('/Login')}>
-                    <Text> Login</Text>
+                    <Text style={{ color:Colors.primary }}> Login</Text>
                 </TouchableOpacity>
             </Text>
         </View>
@@ -185,5 +205,10 @@ const styles = StyleSheet.create({
     loginLink: {
         color: Colors.primary,
         fontWeight: 'bold',
+    },
+    errorText: {
+        color: 'red',
+        marginTop: 5,
+        fontSize: 12,
     },
 });

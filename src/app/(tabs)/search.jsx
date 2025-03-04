@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList, Platform } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
@@ -6,6 +6,7 @@ import { Colors } from '@/constants/Colors';
 import { fetchAllProducts } from '@/src/utils/fetchAllProducts';
 import { useRouter } from 'expo-router';
 import ProductItem from '@/src/components/productitem/ProductItem';
+import axios from 'axios';
 
 const Search = () => {
   const [query, setQuery] = useState('');
@@ -40,13 +41,10 @@ const Search = () => {
     }
   }, [query, products]);
 
-  const handleSearch = () => {
+  const handleSearch = async() => {
     setShowSearchResults(true);
-    const results = products.filter(product =>
-      product.title.toLowerCase().includes(query.toLowerCase()) ||
-      product.description.toLowerCase().includes(query.toLowerCase())
-    );
-    setSearchProducts(results);
+    const response = await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/services/search/products`,{search_query:query});
+    setSearchProducts(response.data.data);
   };
 
   const handleFilter = () => {
@@ -107,13 +105,13 @@ const Search = () => {
 
       {showSearchResults && (
         <View style={styles.content}>
-          <View style={styles.filterHeader}>
+          {setProducts.length <0 && <View style={styles.filterHeader}>
             <Text style={styles.options}>Best Match</Text>
             <TouchableOpacity onPress={() => setIsFilterVisible(!isFilterVisible)} style={styles.filterToggle}>
               <Ionicons name="filter" size={20} color="black" />
               <Text style={styles.filterText}>Filter</Text>
             </TouchableOpacity>
-          </View>
+          </View>}
 
           {isFilterVisible && (
             <View style={styles.filterContainer}>
@@ -163,6 +161,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8f8f8',
+    paddingTop: Platform.OS === 'android' ? 30 : 0
   },
   header: {
     flexDirection: 'row',

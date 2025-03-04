@@ -8,10 +8,11 @@ import { useRouter } from 'expo-router';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const BottomPrice = ({ product }) => {
+const BottomPrice = ({ product,instock }) => {
   const isLoggedIn = useSelector(state => state.loginStatus.isLoggedIn);
   const dispatch = useDispatch();
   const router = useRouter();
+  console.log(instock)
 
   const handleAddToCart = async () => {
     if (isLoggedIn) {
@@ -47,12 +48,14 @@ const BottomPrice = ({ product }) => {
           <Text style={styles.name}>Total Price</Text>
           <Text style={styles.price}>Rs.{product?.price}</Text>
         </View>
-        <TouchableOpacity style={styles.actionButton} onPress={handleAddToCart}>
+        {instock ? <TouchableOpacity style={styles.actionButton} onPress={handleAddToCart}>
           <View style={styles.actionContent}>
             <Ionicons name="card" size={28} color="white" />
             <Text style={styles.actionText}> Buy</Text>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity>:(
+          <Text style={{ fontWeight:'bold' }}>Out of Stock</Text>
+        )}
       </View>
     </View>
   );

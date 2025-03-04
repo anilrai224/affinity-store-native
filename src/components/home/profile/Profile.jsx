@@ -1,18 +1,19 @@
-import { View, Text, SafeAreaView, Image, StyleSheet } from 'react-native';
+import { View, Text, SafeAreaView, Image, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
 import { Colors } from '../../../../constants/Colors';
 import defaultImg from '@/src/assets/default.png';
+import { useRouter } from 'expo-router';
 
 const Profile = () => {
   const loginStatus = useSelector(state => state.loginStatus.isLoggedIn);
   const user = useSelector(state => state.loginStatus.userDetail);
-
+  const router = useRouter();
   const imgUrl = loginStatus && user?.image?.url
     ? `${process.env.EXPO_PUBLIC_IMAGE}/${user.image.url}`
     : defaultImg;
-  
+
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -22,9 +23,11 @@ const Profile = () => {
         </View>
         <View style={styles.iconsContainer}>
           <Ionicons name="notifications-outline" style={styles.icon} size={34} />
-          <View style={styles.imageContainer}>
-            <Image source={imgUrl} style={styles.profileImage} resizeMode="contain" />
-          </View>
+          <TouchableOpacity onPress={()=>router.push('/(tabs)/profile')}>
+            <View style={styles.imageContainer}>
+              <Image source={imgUrl} style={styles.profileImage} resizeMode="contain" />
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
@@ -34,6 +37,7 @@ const Profile = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    paddingTop: Platform.OS === 'android' ? 30 : 0
   },
   header: {
     flexDirection: 'row',

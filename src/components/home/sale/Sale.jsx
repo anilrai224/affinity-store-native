@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import ProductItem from '../../productitem/ProductItem';
 import axios from 'axios';
+import { useRouter } from 'expo-router';
 
 const Sale = () => {
   const [products, setProducts] = useState([]);
-
+  const router = useRouter();
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -21,7 +22,7 @@ const Sale = () => {
 
   const renderProductItems = () => {
     return products.map((item, index) => {
-      if (index % 2 === 0 && index < 4) {
+      if (index % 2 === 0 && index < 4 && item.instock) {
         return (
           <View style={styles.row} key={index}>
             <View style={styles.productContainer}>
@@ -41,7 +42,12 @@ const Sale = () => {
 
   return (
     <View style={styles.sale}>
-      <Text style={styles.heading}>Flash Sale:</Text>
+      <View style={styles.headingContainer}>
+        <Text style={styles.heading}>Flash Sale:</Text>
+          <TouchableOpacity onPress={() => router.push('/allproducts/page')}>
+            <Text>See All</Text>
+          </TouchableOpacity>
+      </View>
       {renderProductItems()}
     </View>
   );
@@ -52,7 +58,10 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     marginTop: 20,
-    marginBottom:100
+  },
+  headingContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   row: {
     flexDirection: 'row',

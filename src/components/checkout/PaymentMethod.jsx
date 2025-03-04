@@ -37,16 +37,6 @@ const PaymentMethod = ({ billingDetails }) => {
                     </View>
                     <Text style={styles.paymentText}>Cash On Delivery (COD)</Text>
                 </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={styles.paymentOption}
-                    onPress={() => handlePaymentMethodSelect('Cod')}
-                >
-                    <View style={styles.radioButton}>
-                        {selectedPaymentMethod === 'CreditCard' && <View style={styles.radioButtonInner} />}
-                    </View>
-                    <Text style={styles.paymentText}>Credit Card</Text>
-                </TouchableOpacity>
             </View>
 
             {selectedPaymentMethod && (

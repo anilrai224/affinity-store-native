@@ -30,19 +30,25 @@ const ProductRating = ({ ratings }) => {
         <Text style={styles.heading}>Rating & Reviews</Text>
       </View>
 
-      {ratings.map((review, index) => (
-        <View key={index} style={styles.reviewContainer}>
-          <View style={styles.reviewTextContainer}>
-            <Text style={styles.comment}>{review.comment}</Text>
-            {renderStars(review.stars)}
-          </View>
-          <View style={styles.userContainer}>
-            <View style={styles.userAvatar}>
-              <Text style={styles.userInitial}>{review.user.name[0]}</Text>
+      {ratings.length > 0 ? (
+        ratings.map((review, index) => (
+          <View key={index} style={styles.reviewContainer}>
+            <View style={styles.reviewTextContainer}>
+              <Text style={styles.comment}>{review.comment}</Text>
+              {renderStars(review.stars)}
+            </View>
+            <View style={styles.userContainer}>
+              <View style={styles.userAvatar}>
+                <Text style={styles.userInitial}>{review.user.name[0]}</Text>
+              </View>
             </View>
           </View>
+        ))
+      ):(
+        <View>
+         <Text>No Reviews yet.</Text> 
         </View>
-      ))}
+      )}
     </View>
   );
 };

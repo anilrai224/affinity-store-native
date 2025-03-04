@@ -42,40 +42,6 @@ const ProductDetail = () => {
       </View>
     );
   }
-  const ratings= [
-    {
-        stars: 5,
-        comment: "wow nice",
-        user: {
-            name: "Anil Rai",
-            email: "anil@anil.com"
-        }
-    },
-    {
-        stars: 4,
-        comment: "lovely man paro hai",
-        user: {
-            name: "Subash Sharma",
-            email: "subash@gmail.com"
-        }
-    },
-    {
-        stars: 4,
-        comment: "lovely man paro hai",
-        user: {
-            name: "Subash Sharma",
-            email: "subash@gmail.com"
-        }
-    },
-    {
-        stars: 4,
-        comment: "lovely man paro hai",
-        user: {
-            name: "Subash Sharma",
-            email: "subash@gmail.com"
-        }
-    }
-]
   return (
     <View style={styles.container}>
       <ScrollView
@@ -84,9 +50,9 @@ const ProductDetail = () => {
       >
         <Image product={product} />
         <ProductDesc product={product} />
-        <ProductRating ratings={ratings}/>
+        <ProductRating ratings={product.ratings}/>
       </ScrollView>
-      <BottomPrice product={product}/>
+      <BottomPrice instock={product.instock} product={product}/>
     </View>
   );
 };
